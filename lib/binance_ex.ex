@@ -17,22 +17,28 @@ defmodule BinanceEx do
 
   """
   def ping() do
-    HTTPoison.get('#{@base_url}/api/v1/ping')
-    |> parse_response
+    binance_get("/api/v1/ping")
   end
 
   def get_depth(symbol, limit) do
     params = %{symbol: symbol, limit: limit}
-    argument_string = URI.encode_query(params)
 
-    response = HTTPoison.get("#{@base_url}/api/v1/depth?#{argument_string}")
-    |> parse_response
-
-    case response do
-      {:ok, orderbook} -> {:ok, BinanceEx.Orderbook.new orderbook}
+    case binance_get("/api/v1/depth", params) do
+      {:ok, orderbook} -> {:ok, BinanceEx.Orderbook.new(orderbook)}
       err -> err
     end
+  end
 
+  defp binance_get(url) do
+    HTTPoison.get("#{@base_url}#{url}")
+    |> parse_response
+  end
+
+  defp binance_get(url, params) do
+    argument_string = URI.encode_query(params)
+
+    HTTPoison.get("#{@base_url}#{url}?#{argument_string}")
+    |> parse_response
   end
 
   defp parse_response({:ok, response}) do

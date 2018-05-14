@@ -6,8 +6,6 @@ defmodule BinanceExTest do
 
   doctest BinanceEx
 
-
-
   test "ping returns an empty map" do
     use_cassette "ping" do
       assert BinanceEx.ping() == {:ok, %{}}
@@ -17,6 +15,7 @@ defmodule BinanceExTest do
   test "should return market depth" do
     use_cassette "market_depth" do
       response = BinanceEx.get_depth("ETCBTC", 10)
+
       case response do
         {:ok, orderbook} ->
           assert length(orderbook.asks) == 10
@@ -24,6 +23,4 @@ defmodule BinanceExTest do
       end
     end
   end
-
-
 end
