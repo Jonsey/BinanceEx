@@ -1,0 +1,39 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.binance.com/api/v1/depth?limit=10&symbol=ETCBTC"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"lastUpdateId\":46597657,\"bids\":[[\"0.00215200\",\"444.50000000\",[]],[\"0.00215000\",\"25.91000000\",[]],[\"0.00214900\",\"1.00000000\",[]],[\"0.00214800\",\"5.44000000\",[]],[\"0.00214700\",\"9.00000000\",[]],[\"0.00214600\",\"125.81000000\",[]],[\"0.00214400\",\"212.20000000\",[]],[\"0.00214300\",\"139.99000000\",[]],[\"0.00214200\",\"256.75000000\",[]],[\"0.00213900\",\"1.00000000\",[]]],\"asks\":[[\"0.00215500\",\"17.63000000\",[]],[\"0.00215600\",\"7.84000000\",[]],[\"0.00215700\",\"337.23000000\",[]],[\"0.00215800\",\"40.58000000\",[]],[\"0.00215900\",\"40.00000000\",[]],[\"0.00216000\",\"31.00000000\",[]],[\"0.00216100\",\"211.18000000\",[]],[\"0.00216200\",\"2.83000000\",[]],[\"0.00216300\",\"14.79000000\",[]],[\"0.00216400\",\"8.17000000\",[]]]}",
+      "headers": {
+        "Content-Type": "application/json",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "Date": "Mon, 14 May 2018 00:43:33 GMT",
+        "Server": "nginx",
+        "Vary": "Accept-Encoding",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains",
+        "X-Frame-Options": "SAMEORIGIN",
+        "X-Xss-Protection": "1; mode=block",
+        "X-Content-Type-Options": "nosniff",
+        "Content-Security-Policy": "default-src 'self'",
+        "X-Content-Security-Policy": "default-src 'self'",
+        "X-WebKit-CSP": "default-src 'self'",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+        "X-Cache": "Miss from cloudfront",
+        "Via": "1.1 32ae8cb69e094c4793f264ed99171242.cloudfront.net (CloudFront)",
+        "X-Amz-Cf-Id": "EublZbZlZS1NxgXvSZwkQ3Fpa8xULEcmhVcwRZ9VzSWYFEuiBv1IIQ=="
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]
