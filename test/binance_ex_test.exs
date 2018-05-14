@@ -60,8 +60,6 @@ defmodule BinanceExTest do
     end
   end
 
-
-
   test "should return list of recent trades" do
     use_cassette "recent_trades" do
       response = BinanceEx.recent_trades("ETCBTC", 2)
@@ -81,6 +79,18 @@ defmodule BinanceExTest do
       case response do
         {:ok, historical_trades} ->
           assert length(historical_trades) == 2
+        _ -> assert false
+      end
+    end
+  end
+
+  test "Should return default amount of aggregate trades" do
+    use_cassette "aggregate_trades" do
+      response = BinanceEx.aggregate_trades("ETCBTC")
+
+      case response do
+        {:ok, aggregate_trades} ->
+          assert length(aggregate_trades) == 500
         _ -> assert false
       end
     end
