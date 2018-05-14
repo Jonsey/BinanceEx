@@ -17,27 +17,115 @@ defmodule BinanceEx do
 
   """
   def ping() do
-    binance_get("/api/v1/ping")
+    get("/api/v1/ping")
   end
 
-  def get_depth(symbol, limit) do
-    params = %{symbol: symbol, limit: limit}
+  @doc """
+  Get the market depth for a specified symbol.
+  symbol is mandatory
+  limit Default 100; max 1000. Valid limits:[5, 10, 20, 50, 100, 500, 1000]
 
-    case binance_get("/api/v1/depth", params) do
+  returns
+      {:ok,
+            %BinanceEx.Orderbook{
+              asks: [
+                ["0.01627700", "18.30000000", []],
+                ["0.01627800", "13.78000000", []],
+                ["0.01627900", "0.90000000", []],
+                ["0.01628000", "54.70000000", []],
+                ["0.01628400", "0.60000000", []]
+              ],
+              bids: [
+                ["0.01624600", "1.03000000", []],
+                ["0.01624500", "7.12000000", []],
+                ["0.01624100", "1.23000000", []],
+                ["0.01624000", "0.07000000", []],
+                ["0.01623900", "0.82000000", []]
+              ],
+              last_update_id: 76432934
+            }}
+
+  """
+  def get_depth(symbol, limit)
+      when limit in [5, 10, 20, 50, 100, 500, 1000] do
+    do_get_depth %{symbol: symbol, limit: limit}
+  end
+
+  def get_depth(_symbol, _limit) do
+    {:err, %{
+        msg: "Illegal characters found in parameter 'interval'; legal range is '5, 10, 20, 50, 100, 500, 1000'."
+      }
+    }
+  end
+
+  def get_depth(symbol) do
+    do_get_depth %{symbol: symbol}
+  end
+
+  defp do_get_depth(params) do
+    case get("/api/v1/depth", params) do
       {:ok, orderbook} -> {:ok, BinanceEx.Orderbook.new(orderbook)}
       err -> err
     end
   end
 
-  defp binance_get(url) do
+  @doc """
+  Get binance exchange information.
+
+  """
+  def get_exchange_info() do
+    case get("/api/v1/exchangeInfo") do
+      {:ok, exchange_info} -> {:ok, BinanceEx.ExchangeInfo.new(exchange_info)}
+      err -> err
+    end
+  end
+
+  @doc """
+  Get recent trade history.
+
+  """
+  def recent_trades(symbol, limit) do
+    params = %{symbol: symbol, limit: limit}
+
+    case get("/api/v1/trades", params) do
+      {:ok, recent_trades} ->
+        {:ok, Enum.map(recent_trades, fn(x) -> BinanceEx.Trade.new(x) end)}
+      err -> err
+    end
+  end
+
+  @doc """
+  Get recent trade history.
+
+  """
+  def historical_trades(symbol, limit) do
+    params = %{symbol: symbol, limit: limit}
+
+    case get_with_key("/api/v1/historicalTrades", params) do
+      {:ok, historical_trades} ->
+        {:ok, Enum.map(historical_trades, fn(x) -> BinanceEx.Trade.new(x) end)}
+      err -> err
+    end
+  end
+
+
+  defp get(url) do
     HTTPoison.get("#{@base_url}#{url}")
     |> parse_response
   end
 
-  defp binance_get(url, params) do
+  defp get(url, params) do
     argument_string = URI.encode_query(params)
 
     HTTPoison.get("#{@base_url}#{url}?#{argument_string}")
+    |> parse_response
+  end
+
+  defp get_with_key(url, params) do
+    argument_string = URI.encode_query(params)
+    headers = [{"X-MBX-APIKEY", Application.get_env(:binance_ex, :api_key)}]
+
+    HTTPoison.get("#{@base_url}#{url}?#{argument_string}", headers)
     |> parse_response
   end
 

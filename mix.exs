@@ -14,7 +14,7 @@ defmodule BinanceEx.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      applications: [:httpoison, :poison],
+      applications: [:exconstructor, :httpoison, :poison],
       extra_applications: [:logger]
     ]
   end
