@@ -108,6 +108,20 @@ defmodule BinanceEx do
     end
   end
 
+  @doc """
+  Get compressed, aggregate trades. Trades that fill at the time, from the same order, with the same price will have the quantity aggregated.
+
+  """
+  def aggregate_trades(symbol) do
+    params = %{symbol: symbol}
+
+    case get_with_key("/api/v1/aggTrades", params) do
+      {:ok, aggregate_trades} ->
+        {:ok, Enum.map(aggregate_trades, fn(x) -> BinanceEx.AggregateTrade.new(x) end)}
+      err -> err
+    end
+  end
+
 
   defp get(url) do
     HTTPoison.get("#{@base_url}#{url}")

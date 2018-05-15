@@ -91,6 +91,8 @@ defmodule BinanceExTest do
       case response do
         {:ok, aggregate_trades} ->
           assert length(aggregate_trades) == 500
+          first_item = List.first(aggregate_trades)
+          assert first_item.a != nil
         _ -> assert false
       end
     end
