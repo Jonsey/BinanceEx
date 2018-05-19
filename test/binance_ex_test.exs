@@ -97,4 +97,18 @@ defmodule BinanceExTest do
       end
     end
   end
+
+  test "Should return kline data with default values" do
+    use_cassette "klines" do
+      response = BinanceEx.klines("ETCBTC", "1m")
+
+      case response do
+        {:ok, klines} ->
+          assert length(klines) == 1000
+          first_item = List.first(klines)
+          assert first_item.open != nil
+        _ -> assert false
+      end
+    end
+  end
 end

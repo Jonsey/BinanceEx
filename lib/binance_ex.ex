@@ -122,6 +122,21 @@ defmodule BinanceEx do
     end
   end
 
+  @doc """
+  Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
+  https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#klinecandlestick-data
+
+  """
+  def klines(symbol, interval) do
+    params = %{symbol: symbol, interval: interval}
+
+    case get("/api/v1/klines", params) do
+      {:ok, klines} ->
+        {:ok, Enum.map(klines, fn(x) -> BinanceEx.Kline.new(x) end)}
+      err -> err
+    end
+  end
+
 
   defp get(url) do
     HTTPoison.get("#{@base_url}#{url}")
