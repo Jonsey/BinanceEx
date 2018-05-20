@@ -106,7 +106,44 @@ defmodule BinanceExTest do
         {:ok, klines} ->
           assert length(klines) == 1000
           first_item = List.first(klines)
+          assert first_item.open_time != nil
           assert first_item.open != nil
+          assert first_item.high != nil
+          assert first_item.low != nil
+          assert first_item.close != nil
+          assert first_item.volume != nil
+          assert first_item.close_time != nil
+          assert first_item.quote_asset_volume != nil
+          assert first_item.no_of_trades != nil
+          assert first_item.taker_buy_base_asset_volume != nil
+          assert first_item.taker_buy_quote_asset_volume != nil
+        _ -> assert false
+      end
+    end
+  end
+
+  test "Should return klines with a limit on number returned" do
+    use_cassette "klines_limit" do
+      response = BinanceEx.klines("ETCBTC", "1m", 10)
+
+      case response do
+        {:ok, klines} ->
+          assert length(klines) == 10
+        _ -> assert false
+      end
+    end
+  end
+
+  test "Should return klines from specified start time" do
+    use_cassette "klines_start_time" do
+      start_time = :os.system_time(:seconds) - 1000
+      end_time = nil
+      response = BinanceEx.klines("ETCBTC", "1m", 10, start_time, end_time)
+
+      case response do
+        {:ok, klines} ->
+          first_item = List.first(klines)
+          assert first_item.open_time >= start_time
         _ -> assert false
       end
     end

@@ -22,6 +22,7 @@ defmodule BinanceEx.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:exvcr, "~> 0.10", only: :test},
       {:mock, "~> 0.3.0", only: :test},
       {:exconstructor, "~> 1.1"},

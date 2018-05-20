@@ -124,17 +124,48 @@ defmodule BinanceEx do
 
   @doc """
   Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
+
   https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#klinecandlestick-data
 
   """
-  def klines(symbol, interval) do
-    params = %{symbol: symbol, interval: interval}
+  def klines(symbol, interval, limit \\ 1000, start_time \\ nil, end_time \\ nil) do
+    params = get_kline_params(symbol, interval, limit, start_time, end_time)
 
     case get("/api/v1/klines", params) do
       {:ok, klines} ->
         {:ok, Enum.map(klines, fn(x) -> BinanceEx.Kline.new(x) end)}
       err -> err
     end
+  end
+
+  defp get_kline_params(symbol, interval, limit, start_time, end_time)
+        when is_nil(start_time)
+        and is_nil(end_time) do
+    %{
+      symbol: symbol,
+      interval: interval,
+      limit: limit
+    }
+  end
+
+  defp get_kline_params(symbol, interval, limit, start_time, end_time)
+        when is_nil(end_time) do
+    %{
+      symbol: symbol,
+      interval: interval,
+      limit: limit,
+      startTime: start_time,
+    }
+  end
+
+  defp get_kline_params(symbol, interval, limit, start_time, end_time) do
+    %{
+      symbol: symbol,
+      interval: interval,
+      limit: limit,
+      startTime: start_time,
+      endTime: end_time
+    }
   end
 
 
