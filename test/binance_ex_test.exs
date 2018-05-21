@@ -148,4 +148,28 @@ defmodule BinanceExTest do
       end
     end
   end
+
+  test "Should return 24hr ticker for symbol" do
+    use_cassette "24hr_ticker" do
+      response = BinanceEx.ticker_24hr("ETCBTC")
+
+      case response do
+        {:ok, ticker} ->
+          assert ticker.symbol == "ETCBTC"
+        _ -> assert false
+      end
+    end
+  end
+
+  test "Should return 24hr ticker for all symbols" do
+    use_cassette "24hr_tickers_all" do
+      response = BinanceEx.ticker_24hr()
+
+      case response do
+        {:ok, tickers} ->
+          assert length(tickers) > 0
+        _ -> assert false
+      end
+    end
+  end
 end

@@ -168,6 +168,23 @@ defmodule BinanceEx do
     }
   end
 
+  def ticker_24hr(symbol) do
+    params = %{symbol: symbol}
+
+    case get_with_key("/api/v1/ticker/24hr", params) do
+      {:ok, ticker} ->
+        {:ok, BinanceEx.Ticker24Hr.new(ticker) }
+      err -> err
+    end
+  end
+
+  def ticker_24hr() do
+    case get_with_key("/api/v1/ticker/24hr") do
+      {:ok, tickers} ->
+        {:ok, Enum.map(tickers, fn(x) -> BinanceEx.Ticker24Hr.new(x) end)}
+      err -> err
+    end
+  end
 
   defp get(url) do
     HTTPoison.get("#{@base_url}#{url}")
@@ -178,6 +195,13 @@ defmodule BinanceEx do
     argument_string = URI.encode_query(params)
 
     HTTPoison.get("#{@base_url}#{url}?#{argument_string}")
+    |> parse_response
+  end
+
+  defp get_with_key(url) do
+    headers = [{"X-MBX-APIKEY", Application.get_env(:binance_ex, :api_key)}]
+
+    HTTPoison.get("#{@base_url}#{url}", headers)
     |> parse_response
   end
 
@@ -198,4 +222,5 @@ defmodule BinanceEx do
   defp parse_response_body({:ok, data}) do
     {:ok, data}
   end
+
 end
