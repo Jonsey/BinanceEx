@@ -172,4 +172,28 @@ defmodule BinanceExTest do
       end
     end
   end
+
+  test "Should return ticker price for symbol" do
+    use_cassette "ticker_price" do
+      response = BinanceEx.ticker_price("ETCBTC")
+
+      case response do
+        {:ok, ticker} ->
+          assert ticker.symbol == "ETCBTC"
+        _ -> assert false
+      end
+    end
+  end
+
+  test "Should return ticker price for all symbols" do
+    use_cassette "ticker_price_all" do
+      response = BinanceEx.ticker_price()
+
+      case response do
+        {:ok, tickers} ->
+          assert length(tickers) > 0
+        _ -> assert false
+      end
+    end
+  end
 end

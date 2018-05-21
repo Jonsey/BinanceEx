@@ -186,6 +186,24 @@ defmodule BinanceEx do
     end
   end
 
+  def ticker_price(symbol) do
+    params = %{symbol: symbol}
+
+    case get_with_key("/api/v1/ticker/price", params) do
+      {:ok, ticker} ->
+        {:ok, BinanceEx.TickerPrice.new(ticker) }
+      err -> err
+    end
+  end
+
+  def ticker_price() do
+    case get_with_key("/api/v1/ticker/price") do
+      {:ok, tickers} ->
+        {:ok, Enum.map(tickers, fn(x) -> BinanceEx.TickerPrice.new(x) end)}
+      err -> err
+    end
+  end
+
   defp get(url) do
     HTTPoison.get("#{@base_url}#{url}")
     |> parse_response
