@@ -204,6 +204,24 @@ defmodule BinanceEx do
     end
   end
 
+  def orderbook_ticker(symbol) do
+    params = %{symbol: symbol}
+
+    case get_with_key("/api/v1/ticker/bookTicker", params) do
+      {:ok, ticker} ->
+        {:ok, BinanceEx.BookTicker.new(ticker) }
+      err -> err
+    end
+  end
+
+  def orderbook_ticker() do
+    case get_with_key("/api/v1/ticker/bookTicker") do
+      {:ok, tickers} ->
+        {:ok, Enum.map(tickers, fn(x) -> BinanceEx.BookTicker.new(x) end)}
+      err -> err
+    end
+  end
+
   defp get(url) do
     HTTPoison.get("#{@base_url}#{url}")
     |> parse_response

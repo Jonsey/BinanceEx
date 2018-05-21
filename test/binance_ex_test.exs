@@ -196,4 +196,28 @@ defmodule BinanceExTest do
       end
     end
   end
+
+  test "Should return order book ticker for symbol" do
+    use_cassette "orderbook_ticker" do
+      response = BinanceEx.orderbook_ticker("ETCBTC")
+
+      case response do
+        {:ok, ticker} ->
+          assert ticker.symbol == "ETCBTC"
+        _ -> assert false
+      end
+    end
+  end
+
+  test "Should return order book tickers for all symbols" do
+    use_cassette "orderbook_ticker_all" do
+      response = BinanceEx.orderbook_ticker()
+
+      case response do
+        {:ok, tickers} ->
+          assert length(tickers) > 0
+        _ -> assert false
+      end
+    end
+  end
 end
